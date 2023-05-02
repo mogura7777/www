@@ -1,7 +1,7 @@
 /** @format */
 
-import my from "./modules/my";
-import "./modules/my.css";
+import my from "./javascripts/my";
+import "./javascripts/my.css";
 
 console.log("This is index.js");
 my();
