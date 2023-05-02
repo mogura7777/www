@@ -1,4 +1,7 @@
 /** @format */
+
 import my from "./modules/my";
-console.log("tttttfdsfdas");
+import "./modules/my.css";
+
+console.log("This is index.js");
 my();

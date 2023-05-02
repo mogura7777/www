@@ -1,5 +1,5 @@
 /** @format */
 
 export default () => {
-  console.log("TTTTT");
+  console.log("this is module");
 };
