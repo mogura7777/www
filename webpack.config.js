@@ -6,23 +6,54 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
+  mode: "production",
+  // devtool: 'eval-source-map',
   entry: {
     main: "./src/javascripts/main.js",
   },
   output: {
     path: path.resolve(__dirname, "./dist"),
-    filename: "javascripts/main.js",
+    filename: "javascripts/[name]-[contenthash].js",
+    publicPath: "/",
   },
   module: {
     rules: [
       {
-        test: /\.css/,
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "ts-loader",
+          },
+        ],
+      },
+      {
+        test: /\.(js|jsx)/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                ["@babel/preset-env", { targets: "> 0.25%, not dead" }],
+                "@babel/preset-react",
+              ],
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(css|scss|sass)$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
           },
           {
             loader: "css-loader",
+            options: { sourceMap: true },
+          },
+          {
+            loader: "sass-loader",
           },
         ],
       },
@@ -30,7 +61,7 @@ module.exports = {
         test: /\.png|\.jpg/,
         type: "asset/resource",
         generator: {
-          filename: "images/[name][ext]",
+          filename: "images/[name]-[contenthash][ext]",
         },
         use: [
           // {
@@ -40,6 +71,15 @@ module.exports = {
           //     name: 'images/[name].[ext]',
           //   },
           // },
+          {
+            loader: "image-webpack-loader",
+            options: {
+              mozjpeg: {
+                progressive: true,
+                quality: 65,
+              },
+            },
+          },
         ],
       },
       {
@@ -60,7 +100,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "./stylesheets/main.css",
+      filename: "./stylesheets/[name]-[contenthash].css",
     }),
     new HtmlWebpackPlugin({
       template: "./src/templates/index.pug",
